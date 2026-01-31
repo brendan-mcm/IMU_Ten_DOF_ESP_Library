@@ -4,7 +4,7 @@
 #include "imu_ten_dof.h"
 #include "esp_log.h"
 
-#define A_DEVID_VAL 0xe5 // hardcoded
+#define A_DEVID_VAL 0xe5 // hardcoded tes
 
 // ID for debugging
 static const char* TAG = "imu_ten_dof";
