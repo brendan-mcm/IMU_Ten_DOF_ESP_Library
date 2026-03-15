@@ -63,7 +63,7 @@ void imu_accel_xyz (float xyz_buff[]) {
     uint8_t read_buff[6];
 
     write_buff[0] = A_DATA;
-    ESP_ERROR_CHECK(i2c_master_transmit_receive(g_accel_handle, write_buff, 1, read_buff, 6, -1));
+    ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_transmit_receive(g_accel_handle, write_buff, 1, read_buff, 6, -1));
 
     int16_t x_accel = ( ((int16_t)read_buff[1]) << 8) | read_buff[0];
     int16_t y_accel = ( ((int16_t)read_buff[3]) << 8) | read_buff[2];
@@ -139,7 +139,7 @@ void imu_gyro_xyz(float xyz_buff[]) {
     uint8_t read_buff[6];
 
     write_buff[0] = G_DATA;
-    ESP_ERROR_CHECK(i2c_master_transmit_receive(g_gyro_handle, write_buff, 1, read_buff, 6, -1));
+    ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_transmit_receive(g_gyro_handle, write_buff, 1, read_buff, 6, -1));
 
     int16_t x_gyro = ( ((int16_t)read_buff[0]) << 8) | read_buff[1];
     int16_t y_gyro = ( ((int16_t)read_buff[2]) << 8) | read_buff[3];
