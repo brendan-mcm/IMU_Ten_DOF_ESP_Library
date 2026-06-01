@@ -58,12 +58,18 @@ void imu_accel_init(void) {
     ESP_ERROR_CHECK(i2c_master_transmit(g_accel_handle, write_buff, 2, -1));
 }
 
-void imu_accel_xyz (float xyz_buff[]) {
+esp_err_t imu_accel_xyz (float xyz_buff[]) {
     uint8_t write_buff[1];
     uint8_t read_buff[6];
 
     write_buff[0] = A_DATA;
-    ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_transmit_receive(g_accel_handle, write_buff, 1, read_buff, 6, -1));
+    esp_err_t data_res = i2c_master_transmit_receive(g_accel_handle, write_buff, 1, read_buff, 6, -1);
+    if (data_res != ESP_OK) {
+        xyz_buff[0] = 0;
+        xyz_buff[1] = 0;
+        xyz_buff[2] = 0;
+        return data_res;
+    }
 
     int16_t x_accel = ( ((int16_t)read_buff[1]) << 8) | read_buff[0];
     int16_t y_accel = ( ((int16_t)read_buff[3]) << 8) | read_buff[2];
@@ -72,6 +78,8 @@ void imu_accel_xyz (float xyz_buff[]) {
     xyz_buff[0] = (x_accel - g_ax_offset) / A_LSB_G;
     xyz_buff[1] = (y_accel - g_ay_offset) / A_LSB_G;
     xyz_buff[2] = (z_accel - g_az_offset) / A_LSB_G;
+
+    return data_res;
 }
 
 // params: xyz arr in g, output buffer for roll pitch
@@ -134,12 +142,18 @@ void imu_gyro_cali(void) {
 
 }
 
-void imu_gyro_xyz(float xyz_buff[]) {
+esp_err_t imu_gyro_xyz(float xyz_buff[]) {
     uint8_t write_buff[1];
     uint8_t read_buff[6];
 
     write_buff[0] = G_DATA;
-    ESP_ERROR_CHECK_WITHOUT_ABORT(i2c_master_transmit_receive(g_gyro_handle, write_buff, 1, read_buff, 6, -1));
+    esp_err_t data_res = i2c_master_transmit_receive(g_gyro_handle, write_buff, 1, read_buff, 6, -1);
+    if (data_res != ESP_OK) {
+        xyz_buff[0] = 0;
+        xyz_buff[1] = 0;
+        xyz_buff[2] = 0;
+        return data_res;
+    }
 
     int16_t x_gyro = ( ((int16_t)read_buff[0]) << 8) | read_buff[1];
     int16_t y_gyro = ( ((int16_t)read_buff[2]) << 8) | read_buff[3];
@@ -158,5 +172,6 @@ void imu_gyro_xyz(float xyz_buff[]) {
     xyz_buff[1] = roundf(xyz_buff[1]);
     xyz_buff[2] = roundf(xyz_buff[2]);
 
+    return data_res;
 }
 

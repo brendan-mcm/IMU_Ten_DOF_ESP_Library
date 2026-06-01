@@ -23,7 +23,7 @@
 
 // ITG 3200
 #define G_I2C_ADDR 0x68
-#define G_CLK_SPEED 400000 // supports fast mode
+#define G_CLK_SPEED 100000 // supports fast mode
 
 // Registers
 #define G_WHOAMI 0x00 // WHO AM I
@@ -44,10 +44,10 @@ void imu_init(i2c_master_bus_handle_t* master_bus_handle);
 
 // ADXL345
 void imu_accel_init(void);
-void imu_accel_xyz(float xyz_buff[]);
+esp_err_t imu_accel_xyz(float xyz_buff[]);
 void imu_accel_rp (float xyz_arr[], float rp_buff[]);
 
 // ITG3200
 void imu_gyro_init(void);
 void imu_gyro_cali(void);
-void imu_gyro_xyz(float xyz_buff[]);
+esp_err_t imu_gyro_xyz(float xyz_buff[]);
